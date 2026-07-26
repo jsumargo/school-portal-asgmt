@@ -1,0 +1,39 @@
+generator client {
+  provider = "prisma-client"
+  output   = "../src/generated/prisma"
+}
+
+datasource db {
+  provider = "postgresql"
+}
+
+model classes {
+  id              Int       @id @default(autoincrement())
+  levelId         Int
+  name            String    @unique
+  formTeacherId   Int       @unique
+  teachers        teachers  @relation(fields: [formTeacherId], references: [id], onDelete: Restrict, onUpdate: NoAction)
+  levels          levels    @relation(fields: [levelId], references: [id], onDelete: Restrict)
+}
+
+model teachers {
+  id             Int      @id @default(autoincrement())
+  name           String
+  subjectId      Int
+  email          String   @unique
+  contactNumber  String
+  subjects       subjects @relation(fields: [subjectId], references: [id], onDelete: Restrict)
+  classes        classes?
+}
+
+model subjects {
+  id          Int       @id @default(autoincrement())
+  name        String    @unique
+  teachers    teachers[]
+}
+
+model levels {
+  id          Int       @id @default(autoincrement())
+  name        String    @unique
+  classes     classes[]
+}

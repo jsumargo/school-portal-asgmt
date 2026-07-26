@@ -1,0 +1,19 @@
+{
+  "name": "school-portal",
+  "workspaces": [
+    "apps/*",
+    "packages/*"
+  ],
+  "scripts": {
+    "dev:server": "npm run build:packages && npm run dev --workspace=apps/server",
+    "dev:client": "npm run dev --workspace=apps/client",
+    "build": "npm run build:packages && npm run build:client",
+    "build:packages": "npm run build --workspace=packages/shared",
+    "build:client": "npm run build --workspace=apps/client",
+    "typecheck": "npm run typecheck --workspace=apps/server && npm run typecheck --workspace=apps/client",
+    "lint": "npm run lint --workspace=apps/server && npm run lint --workspace=apps/client",
+    "lint:fix": "npm run lint:fix --workspace=apps/server && npm run lint:fix --workspace=apps/client",
+    "db:push": "npm run db:push --workspace=apps/server",
+    "db:seed": "npm run db:seed --workspace=apps/server"
+  }
+}
