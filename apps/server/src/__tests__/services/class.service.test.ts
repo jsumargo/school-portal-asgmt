@@ -57,9 +57,7 @@ describe("classService", () => {
     };
 
     test("should create class successfully", async () => {
-      vi.mocked(levelService.getLevelByName).mockResolvedValueOnce(
-        mockLevel as any,
-      );
+      vi.mocked(levelService.getLevelByName).mockResolvedValueOnce(mockLevel);
       vi.mocked(teacherService.getTeacherByEmail).mockResolvedValueOnce(
         mockTeacher as any,
       );
@@ -69,7 +67,7 @@ describe("classService", () => {
         name: "Class Name",
         levelId: 1,
         formTeacherId: 2,
-      } as any);
+      });
 
       await expect(classService.createClass(payload)).resolves.toBeUndefined();
       expect(prisma.classes.create).toHaveBeenCalledWith({
@@ -88,9 +86,7 @@ describe("classService", () => {
     });
 
     test("should throw NotFoundError when teacher not found", async () => {
-      vi.mocked(levelService.getLevelByName).mockResolvedValueOnce(
-        mockLevel as any,
-      );
+      vi.mocked(levelService.getLevelByName).mockResolvedValueOnce(mockLevel);
       vi.mocked(teacherService.getTeacherByEmail).mockResolvedValueOnce(null);
 
       await expect(classService.createClass(payload)).rejects.toThrow(
@@ -101,9 +97,7 @@ describe("classService", () => {
     });
 
     test("should throw ConflictError when teacher is already assigned to another class", async () => {
-      vi.mocked(levelService.getLevelByName).mockResolvedValueOnce(
-        mockLevel as any,
-      );
+      vi.mocked(levelService.getLevelByName).mockResolvedValueOnce(mockLevel);
       vi.mocked(teacherService.getTeacherByEmail).mockResolvedValueOnce(
         mockTeacher as any,
       );
@@ -112,7 +106,7 @@ describe("classService", () => {
         name: "Other Class",
         levelId: 1,
         formTeacherId: 2,
-      } as any);
+      });
 
       await expect(classService.createClass(payload)).rejects.toThrow(
         ConflictError,
@@ -123,9 +117,7 @@ describe("classService", () => {
     test("should call handlePrismaError when class creation throws", async () => {
       const dbError = new Error("DB error");
 
-      vi.mocked(levelService.getLevelByName).mockResolvedValueOnce(
-        mockLevel as any,
-      );
+      vi.mocked(levelService.getLevelByName).mockResolvedValueOnce(mockLevel);
       vi.mocked(teacherService.getTeacherByEmail).mockResolvedValueOnce(
         mockTeacher as any,
       );

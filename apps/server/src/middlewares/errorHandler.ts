@@ -12,7 +12,7 @@ export const errorHandler = (
   if (
     err instanceof SyntaxError &&
     "status" in err &&
-    (err as any).status === 400 &&
+    (err as { status?: unknown }).status === 400 &&
     "body" in err
   ) {
     logWarn("Malformed JSON in request body");

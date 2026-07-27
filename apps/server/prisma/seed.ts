@@ -49,5 +49,6 @@ main()
   .catch(async (e) => {
     console.error(e);
     await prisma.$disconnect();
+    // eslint-disable-next-line n/no-process-exit -- seed script needs to signal failure to the shell/CI
     process.exit(1);
   });

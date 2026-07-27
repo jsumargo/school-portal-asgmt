@@ -48,7 +48,7 @@ describe("teacherService", () => {
 
     test("should create teacher successfully", async () => {
       vi.mocked(subjectService.getSubjectByName).mockResolvedValueOnce(
-        mockSubject as any,
+        mockSubject,
       );
       vi.mocked(prisma.teachers.create).mockResolvedValueOnce({
         id: 1,
@@ -56,7 +56,7 @@ describe("teacherService", () => {
         email: "teacher@mail.com",
         contactNumber: "88888888",
         subjectId: 1,
-      } as any);
+      });
 
       await expect(
         teacherService.createTeacher(payload),
@@ -84,7 +84,7 @@ describe("teacherService", () => {
       const dbError = new Error("DB error");
 
       vi.mocked(subjectService.getSubjectByName).mockResolvedValueOnce(
-        mockSubject as any,
+        mockSubject,
       );
       vi.mocked(prisma.teachers.create).mockRejectedValueOnce(dbError);
       vi.mocked(handlePrismaError).mockImplementationOnce(() => {
