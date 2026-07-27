@@ -20,8 +20,9 @@ School Portal is a fullstack application for education administrators to keep tr
 
 ## Future Improvements
 
-- **Client-side form validation** — add validation feedback on the frontend using a form library integrated with the shared Zod schemas
-- **Server-side Pagination** — add `page` and `limit` query parameters to `GET /api/teachers` and `GET /api/classes` for large datasets
+- **Filtering & search** — expand query param support on list endpoints (e.g. `GET /api/teachers?assigned=false`, `GET /api/classes?level=Primary`) for more flexible filtering beyond what's currently implemented
+- **Pagination** — add pagination to list endpoints (e.g. `GET /api/teachers?page=1&limit=20`, `GET /api/classes?page=1&limit=20`) for large datasets
+- **Form library integration** — migrate client-side form validation to a form library integrated with the shared Zod schemas, replacing the current manual validation approach
 
 ## Prerequisites
 
@@ -33,7 +34,7 @@ School Portal is a fullstack application for education administrators to keep tr
 ### 1. Clone the repository
 
 ```bash
-git clone <repo-url>
+git clone https://github.com/jsumargo/school-portal-asgmt
 cd school-portal
 ```
 
@@ -134,14 +135,6 @@ Run all scripts from the **project root**:
 | POST   | `/api/classes`  | Create a class       | 201            |
 | GET    | `/api/subjects` | Get all subjects     | 200            |
 | GET    | `/api/levels`   | Get all class levels | 200            |
-
-### Error Response Format
-
-All errors follow this structure:
-
-```json
-{ "error": "A meaningful error message" }
-```
 
 ## Useful Docker Commands
 
