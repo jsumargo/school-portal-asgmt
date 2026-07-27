@@ -4,7 +4,7 @@ School Portal is a fullstack application for education administrators to keep tr
 
 ## Tech Stack
 
-- **Frontend:** React, TypeScript, Vite, React Query, Axios, Material UI
+- **Frontend:** React, TypeScript, Vite, React Query, Axios, Material UI, React Hook Form
 - **Backend:** Node.js (v21.2+), Express 5, TypeScript, Prisma ORM
 - **Database:** PostgreSQL (via Docker)
 - **Shared:** Zod schemas and TypeScript types via internal `@school-portal/shared` package
@@ -22,7 +22,6 @@ School Portal is a fullstack application for education administrators to keep tr
 
 - **Filtering & search** — expand query param support on list endpoints (e.g. `GET /api/teachers?assigned=false`, `GET /api/classes?level=Primary`) for more flexible filtering beyond what's currently implemented
 - **Pagination** — add pagination to list endpoints (e.g. `GET /api/teachers?page=1&limit=20`, `GET /api/classes?page=1&limit=20`) for large datasets
-- **Form library integration** — migrate client-side form validation to a form library integrated with the shared Zod schemas, replacing the current manual validation approach
 
 ## Prerequisites
 

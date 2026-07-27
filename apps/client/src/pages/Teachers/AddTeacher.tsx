@@ -1,64 +1,52 @@
 import Button from "@mui/material/Button";
 import Container from "@mui/material/Container";
-import { type SelectChangeEvent } from "@mui/material/Select";
+import Select from "@mui/material/Select";
 import Stack from "@mui/material/Stack";
 import ArrowBackIcon from "@mui/icons-material/ArrowBack";
 import { useNavigate } from "react-router";
-import { useState } from "react";
 import Typography from "@mui/material/Typography";
 import { useCreateTeacher } from "@/hooks/useTeachers";
-import TeacherForm from "./TeacherForm";
 import {
   CreateTeacherSchema,
   type CreateTeacherRequest,
+  type SubjectData,
 } from "@school-portal/shared";
 import { useGetSubjects } from "@/hooks/useSubjects";
 import { APP_ROUTES } from "@/constants/appRoutes";
+import { Controller, useForm } from "react-hook-form";
+import { zodResolver } from "@hookform/resolvers/zod";
+import FormControl from "@mui/material/FormControl";
+import FormHelperText from "@mui/material/FormHelperText";
+import InputLabel from "@mui/material/InputLabel";
+import MenuItem from "@mui/material/MenuItem";
+import Paper from "@mui/material/Paper";
+import Skeleton from "@mui/material/Skeleton";
+import TextField from "@mui/material/TextField";
+import Box from "@mui/material/Box";
 
 export default function AddTeacher() {
   const navigate = useNavigate();
   const createTeacher = useCreateTeacher();
-  const { data: subjectList, isLoading } = useGetSubjects();
+  const { data: subjectList, isLoading: isLoadingSubjectList } =
+    useGetSubjects();
 
-  const [formValues, setFormValues] = useState<CreateTeacherRequest>({
-    name: "",
-    subject: "",
-    email: "",
-    contactNumber: "",
+  const {
+    register,
+    handleSubmit,
+    control,
+    formState: { errors },
+  } = useForm<CreateTeacherRequest>({
+    resolver: zodResolver(CreateTeacherSchema),
+    defaultValues: {
+      name: "",
+      subject: "",
+      email: "",
+      contactNumber: "",
+    },
   });
 
-  const [errors, setErrors] = useState<
-    Partial<Record<keyof CreateTeacherRequest, string>>
-  >({});
-
-  const handleChange = (
-    e:
-      | React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>
-      | SelectChangeEvent,
-  ) => {
-    const { name, value } = e.target;
-    setFormValues((prev) => ({ ...prev, [name]: value }));
-    setErrors((prev) => {
-      const next = { ...prev };
-      delete next[name as keyof CreateTeacherRequest];
-      return next;
-    });
-  };
-
-  const handleSubmit = (e: React.FormEvent) => {
-    e.preventDefault();
-
-    const result = CreateTeacherSchema.safeParse(formValues);
-    if (!result.success) {
-      const fieldErrors: Record<string, string> = {};
-      result.error.issues.forEach((issue) => {
-        fieldErrors[issue.path[0] as string] = issue.message;
-      });
-      setErrors(fieldErrors);
-      return;
-    }
-
-    createTeacher.mutate(formValues, {
+  const onSubmit = (data: CreateTeacherRequest) => {
+    createTeacher.mutate(data, {
       onSuccess: () => navigate(APP_ROUTES.teachers),
     });
   };
@@ -69,14 +57,92 @@ export default function AddTeacher() {
         Add Teacher
       </Typography>
 
-      <form onSubmit={handleSubmit}>
-        <TeacherForm
-          formValues={formValues}
-          errors={errors}
-          onChange={handleChange}
-          subjectList={subjectList}
-          isLoadingSubjectList={isLoading}
-        />
+      <form onSubmit={handleSubmit(onSubmit)}>
+        <Paper sx={{ padding: "2rem" }}>
+          <Stack spacing={2}>
+            <Box>
+              <InputLabel htmlFor="name-input">Name</InputLabel>
+              <TextField
+                id="name-input"
+                {...register("name")}
+                error={!!errors.name}
+                helperText={errors.name?.message}
+                placeholder="Name"
+                sx={{ minWidth: { xs: "100%", sm: "30rem" } }}
+              />
+            </Box>
+
+            <Box>
+              <InputLabel htmlFor="subject-select">Subject</InputLabel>
+              <Controller
+                name="subject"
+                control={control}
+                render={({ field, fieldState }) => (
+                  <FormControl
+                    error={!!fieldState.error}
+                    sx={{ minWidth: { xs: "100%", sm: "30rem" } }}
+                  >
+                    <Select
+                      id="subject-select"
+                      {...field}
+                      displayEmpty
+                      renderValue={(value: string) => {
+                        if (!value) {
+                          return (
+                            <Typography color="textDisabled">
+                              Select a subject
+                            </Typography>
+                          );
+                        }
+                        return value;
+                      }}
+                    >
+                      {isLoadingSubjectList ? (
+                        <>
+                          <Skeleton sx={{ margin: "0 1rem" }} />
+                          <Skeleton sx={{ margin: "0 1rem" }} />
+                          <Skeleton sx={{ margin: "0 1rem" }} />
+                        </>
+                      ) : (
+                        subjectList?.map((subject: SubjectData) => (
+                          <MenuItem key={subject.name} value={subject.name}>
+                            {subject.name}
+                          </MenuItem>
+                        ))
+                      )}
+                    </Select>
+                    <FormHelperText>{fieldState.error?.message}</FormHelperText>
+                  </FormControl>
+                )}
+              />
+            </Box>
+
+            <Box>
+              <InputLabel htmlFor="email-input">Email Address</InputLabel>
+              <TextField
+                id="email-input"
+                {...register("email")}
+                error={!!errors.email}
+                helperText={errors.email?.message}
+                placeholder="Email address"
+                sx={{ minWidth: { xs: "100%", sm: "30rem" } }}
+              />
+            </Box>
+
+            <Box>
+              <InputLabel htmlFor="contact-input">Work Contact Number</InputLabel>
+              <TextField
+              id="contact-input"
+                {...register("contactNumber")}
+                error={!!errors.contactNumber}
+                helperText={errors.contactNumber?.message}
+                placeholder="Work contact number"
+
+                sx={{ minWidth: { xs: "100%", sm: "30rem" } }}
+              />
+            </Box>
+          </Stack>
+        </Paper>
 
         <Stack
           direction="row"

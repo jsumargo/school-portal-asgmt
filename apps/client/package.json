@@ -14,7 +14,7 @@
   "dependencies": {
     "@emotion/react": "^11.14.0",
     "@emotion/styled": "^11.14.1",
-    "@hookform/resolvers": "^3.10.0",
+    "@hookform/resolvers": "^5.5.7",
     "@mui/icons-material": "^9.2.0",
     "@mui/material": "^9.2.0",
     "@school-portal/shared": "*",
@@ -22,6 +22,7 @@
     "axios": "^1.18.1",
     "react": "^19.2.7",
     "react-dom": "^19.2.7",
+    "react-hook-form": "^7.83.0",
     "react-router": "^8.2.0"
   },
   "devDependencies": {
